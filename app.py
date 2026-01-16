@@ -37,7 +37,7 @@ def submit():
     inp=f"SUBMISSION_{sub_id}"
     def a():
         judge.write(f"{inp}.cpp",data['code'])
-        subs[sub_id]=judge.main(data['problemId'],1,inp,'a',lambda a,b:a==b)
+        subs[sub_id]=judge.main(data['problemId'],1,inp,'a')
     threading.Thread(target=a).start()
     return str(sub_id)
 

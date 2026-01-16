@@ -22,11 +22,18 @@ def read(filename):
     with open(filename, "r") as file: 
         return file.read()
 
-def test(inp_file,out_file, check):
+def test(test_dir,inp_file,out_file):
     shutil.copy(inp_file, f"{FILE}.INP")
     r = run(INP)
     run(INP)
-    return (check(read(f"{FILE}.OUT"), read(out_file)) if r != -1 else -1, r)
+    proc = subprocess.run(
+        ["python", f"{test_dir}/checker.py"],
+        input=out_file,
+        text=True,
+        capture_output=True
+    )
+    res=bool(proc.stdout)
+    return (res if r != -1 else -1, r)
 
 def cleanup():
     time.sleep(1)
@@ -34,7 +41,7 @@ def cleanup():
         if os.path.exists(f):
             os.remove(f)
 
-def main(problem_id, time_limit, inp, file, check):
+def main(problem_id, time_limit, inp, file):
     global INP, TIME_LIMIT, FILE
     INP = inp
     FILE = file
@@ -48,7 +55,7 @@ def main(problem_id, time_limit, inp, file, check):
         test_dir = f"Problems/{problem_id}"
         test_count = len([f for f in os.listdir(test_dir) if f.endswith('.INP')])
         for i in range(1, test_count + 1):
-            a, r = test(f"{test_dir}/{i}.INP",f"{test_dir}/{i}.OUT", check)
+            a, r = test(test_dir,f"{test_dir}/{i}.INP",f"{test_dir}/{i}.OUT")
             t = "AC" if a else "WA" if a != -1 else "TLE"
             res.append(t)
         cleanup()

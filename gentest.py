@@ -5,13 +5,13 @@ MAIN_SOL="sol"
 NUM_TEST=20
 TIME_LIMIT=1
 PROBLEM_ID=1
-def create():
-    a=randint(1,10000)
-    b=randint(1,100000)
-    print(a,b)
-
-def check(a,b):
-    return a==b
+def create(i):
+    lim=0
+    if i<=NUM_TEST*0.4: lim=1e6
+    else: lim=1e9
+    l=randint(1,int(lim))
+    r=randint(l,int(lim))
+    print(l,r)
 
 def run(filename):
     start = time.time()
@@ -31,7 +31,7 @@ def read(filename):
     with open(filename,"r") as file: return file.read()
 def test(pid,tid):
     write(f"{MAIN_SOL}.INP")
-    create()
+    create(tid)
     sys.stdout.close()
     sys.stdout=sys.__stdout__
     run(MAIN_SOL)
