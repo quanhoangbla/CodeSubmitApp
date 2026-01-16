@@ -5,14 +5,17 @@ app = Flask(__name__)
 
 sub_id=0
 subs={}
+subs_pid={}
 
 def refresh_problems():
-    global problem_set
+    global problem_set,problem_name
+    problem_set=[]
+    problem_name={}
     with open("problemset.txt",'r') as file:
-        problem_set=file.readlines()
-    for i in range(0,len(problem_set),2):
-        problem_set[i]=problem_set[i].replace("\n",'')
-        problem_set[i+1]=problem_set[i+1].replace("\n",'')
+        data=file.readlines()
+    for i in range(0,len(data),2):
+        problem_set.append(data[i].replace("\n",''))
+        problem_name[problem_set[i//2]]=data[i+1].replace("\n",'')
 
 @app.route('/')
 def home():
@@ -24,8 +27,8 @@ def home():
 def problems():
     res=[]
     refresh_problems()
-    for i in range(0,len(problem_set),2):
-        res.append({"title":problem_set[i+1], "id":problem_set[i]})
+    for i in range(0,len(problem_set)):
+        res.append({"title":problem_name[problem_set[i]], "id":problem_set[i]})
 
     return res
 
@@ -35,6 +38,7 @@ def submit():
     sub_id+=1
     data=request.get_json()
     inp=f"SUBMISSION_{sub_id}"
+    subs_pid[sub_id]=data['problemId']
     def a():
         judge.write(f"{inp}.cpp",data['code'])
         subs[sub_id]=judge.main(data['problemId'],1,inp,'a')
@@ -43,14 +47,14 @@ def submit():
 
 refresh_problems()
 
-@app.route("/problem-<int:pid>")
+@app.route("/problem-<pid>")
 def problem(pid):
-    if str(pid) not in problem_set[::2]:
+    if pid not in problem_set:
         return "Invalid problem", 404
     return render_template(
         "problem.html",
         id=pid,
-        name=problem_set[pid*2-1]
+        name=problem_name[pid]
     )
 
 @app.route("/submissions/<int:id>")
@@ -59,7 +63,8 @@ def submissions(id):
         return "Invalid submission", 404
     return render_template(
         "submissions.html",
-        id=id
+        id=id,
+        pid=subs_pid[id]
     )
 
 @app.route("/api/submissions/<int:id>")

@@ -99,7 +99,7 @@
                         data.forEach(problem => {
                             const button = document.createElement('button');
                             button.className = 'btn-primary';
-                            button.textContent = `Problem ${problem.id}: ${problem.title}`;
+                            button.textContent = (localStorage.getItem(problem.id)=="✅"?"✅":"❌")+` Problem ${problem.id}: ${problem.title}`;
                             button.onclick = () => open(`problem-${problem.id}`);
                             buttonGroup.appendChild(button);
                         });

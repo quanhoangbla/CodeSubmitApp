@@ -146,12 +146,15 @@
                 .then(data => {
                     if (Array.isArray(data)) {
                         var i=0;
+                        var ac=true;
                         data.forEach(sts => {
                             i++;
                             var clr=sts=="AC"?"greenyellow":"red";
                             if (sts=="TLE") clr="grey";
+                            if (sts!="AC") ac=false;
                             document.getElementById("detail-row").innerHTML+=`<div><strong>Testcase ${i} Status:</strong> <span id="status"><strong style="color: ${clr};">${sts}</strong></span></div>`
                         });
+                        if (ac) localStorage.setItem("{{pid}}","✅");
                         document.getElementById('resultStatus').textContent = '';
                     } else {
                         console.error('Data is not an array:', data);
