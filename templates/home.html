@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Problems</h1>
+        <p class="subtitle">Select a problem to submit your solution</p>
+        
+        <div class="button-group">
+
+        </div>
+    </div>
+    
+    <script>
+        function navigateTo(page) {
+            fetch(`/api/problems/${page}`)
+                .then(response => response.json())
+                .then(data => {
+                    window.location.href = `/problem/${page}`;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function loadProblems() {
+            fetch('/api/problems')
+                .then(response => response.json())
+                .then(data => {
+                    const buttonGroup = document.querySelector('.button-group');
+                    buttonGroup.innerHTML = '';
+                    if (Array.isArray(data)) {
+                        data.forEach(problem => {
+                            const button = document.createElement('button');
+                            button.className = 'btn-primary';
+                            button.textContent = `Problem ${problem.id}: ${problem.title}`;
+                            button.onclick = () => open(`problem-${problem.id}`);
+                            buttonGroup.appendChild(button);
+                        });
+                    } else {
+                        console.error('Data is not an array:', data);
+                    }
+                })
+                .catch(error => console.error('Error loading problems:', error));
+        }
+
+        loadProblems();
+    </script>
+</body>
+</html>
