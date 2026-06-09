@@ -41,7 +41,7 @@ def submit():
     subs_pid[sub_id]=data['problemId']
     def a():
         judge.write(f"{inp}.cpp",data['code'])
-        subs[sub_id]=judge.main(data['problemId'],1,inp,'a')
+        subs[sub_id]=judge.main(data['problemId'],1,inp,'a',problem_name[data['problemId']])
     threading.Thread(target=a).start()
     return str(sub_id)
 
@@ -64,7 +64,8 @@ def submissions(id):
     return render_template(
         "submissions.html",
         id=id,
-        pid=subs_pid[id]
+        pid=subs_pid[id],
+        pname=problem_name[subs_pid[id]]
     )
 
 @app.route("/api/submissions/<int:id>")

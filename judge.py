@@ -23,9 +23,10 @@ def read(filename):
         return file.read()
 
 def test(test_dir,inp_file,out_file):
-    shutil.copy(inp_file, f"{FILE}.INP")
+    shutil.copy(inp_file, f"{PID}.INP")
     r = run(INP)
-    run(INP)
+    write("A.INP",read(f"{PID}.INP"))
+    write("A.OUT",read(f"{PID}.OUT"))
     proc = subprocess.run(
         ["python", f"{test_dir}/checker.py"],
         input=out_file,
@@ -37,14 +38,15 @@ def test(test_dir,inp_file,out_file):
 
 def cleanup():
     time.sleep(1)
-    for f in [f"{FILE}.INP", f"{FILE}.OUT", f"{INP}.exe"]:
+    for f in [f"{FILE}.INP", f"{FILE}.OUT", f"{INP}.exe",f"{PID}.INP", f"{PID}.OUT"]:
         if os.path.exists(f):
             os.remove(f)
 
-def main(problem_id, time_limit, inp, file):
-    global INP, TIME_LIMIT, FILE
+def main(problem_id, time_limit, inp, file, pid):
+    global INP, TIME_LIMIT, FILE, PID
     INP = inp
     FILE = file
+    PID = pid
     TIME_LIMIT = time_limit
     
     print(f"Compiling {INP}.cpp")

@@ -4,16 +4,14 @@ import os, sys, shutil, time, subprocess
 MAIN_SOL="sol"
 NUM_TEST=10
 TIME_LIMIT=1
-PROBLEM_ID=2
+PROBLEM_ID="test"
+OUTPUT=True
 def create(i):
-    lim=0
-    if i<=NUM_TEST*0.3: lim=20
-    else: lim=1e5
-    n=randint(1,lim)
+    if i<=NUM_TEST*.3:lim1=20;lim2=50
+    else: lim1=1e6;lim2=1e8
+    n=randint(1,int(lim1))
     print(n)
-    for i in range(n): print(randint(1,int(1e9)),end=' ')
-    print()
-
+    for _ in range(n):print(randint(1,int(lim2)),end=' ')
 def run(filename):
     start = time.time()
     try:
@@ -35,20 +33,26 @@ def test(pid,tid):
     create(tid)
     sys.stdout.close()
     sys.stdout=sys.__stdout__
-    run(MAIN_SOL)
+    if OUTPUT:run(MAIN_SOL)
     shutil.copy(f"{MAIN_SOL}.INP",f"Problems/{pid}/{tid}.INP")
-    shutil.copy(f"{MAIN_SOL}.OUT",f"Problems/{pid}/{tid}.OUT")
-
-print("Compiling")
-os.system(f"g++ {MAIN_SOL}.cpp -o {MAIN_SOL}.exe")
-print("Done")
+    if OUTPUT:shutil.copy(f"{MAIN_SOL}.OUT",f"Problems/{pid}/{tid}.OUT")
+    else:
+        with open(f"Problems/{pid}/{tid}.OUT","w") as file:file.write("")
+create(1)
+if input()!='':exit()
+if OUTPUT:
+    print("Compiling")
+    os.system(f"g++ {MAIN_SOL}.cpp -o {MAIN_SOL}.exe")
+    print("Done Compiling")
 def cleanup():
     print("Cleaning Up")
     time.sleep(1)
     os.remove(f"{MAIN_SOL}.INP")
-    os.remove(f"{MAIN_SOL}.OUT")
-    os.remove(f"{MAIN_SOL}.exe")
+    if OUTPUT:
+        os.remove(f"{MAIN_SOL}.OUT")
+        os.remove(f"{MAIN_SOL}.exe")
     print("Finished")
+print("Generating Tests")
 try:
     tests=0
     for i in range(1,NUM_TEST+1):
