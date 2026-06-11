@@ -1,17 +1,20 @@
 from random import *
 import os, sys, shutil, time, subprocess
 
-MAIN_SOL="sol"
-NUM_TEST=10
+MAIN_SOL="a"
+NUM_TEST=20
 TIME_LIMIT=1
 PROBLEM_ID="test"
 OUTPUT=True
 def create(i):
-    if i<=NUM_TEST*.3:lim1=20;lim2=50
-    else: lim1=1e6;lim2=1e8
-    n=randint(1,int(lim1))
+    if i<=NUM_TEST*.3:lim1=20;lim2=10;lim3=50
+    else: lim1=5000;lim2=1000;lim3=1e9
+    n=randint(1,lim1)
     print(n)
-    for _ in range(n):print(randint(1,int(lim2)),end=' ')
+    for _ in range(n):print(randint(1,lim2),end=' ')
+    print()
+    for _ in range(n):print(randint(1,lim3),end=' ')
+    print()
 def run(filename):
     start = time.time()
     try:
