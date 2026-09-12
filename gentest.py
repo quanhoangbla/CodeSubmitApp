@@ -6,15 +6,14 @@ NUM_TEST=20
 TIME_LIMIT=1
 PROBLEM_ID="test"
 OUTPUT=True
+
+def check(n):
+    return len(set(str(n)))!=len(str(n))
 def create(i):
-    if i<=NUM_TEST*.3:lim1=20;lim2=10;lim3=50
-    else: lim1=5000;lim2=1000;lim3=1e9
-    n=randint(1,lim1)
-    print(n)
-    for _ in range(n):print(randint(1,lim2),end=' ')
+    lim=10 if i<=10 else 100
+    for _ in range(4):print(randint(-lim,lim),end=' ')
     print()
-    for _ in range(n):print(randint(1,lim3),end=' ')
-    print()
+
 def run(filename):
     start = time.time()
     try:
@@ -37,8 +36,8 @@ def test(pid,tid):
     sys.stdout.close()
     sys.stdout=sys.__stdout__
     if OUTPUT:run(MAIN_SOL)
-    shutil.copy(f"{MAIN_SOL}.INP",f"Problems/{pid}/{tid}.INP")
-    if OUTPUT:shutil.copy(f"{MAIN_SOL}.OUT",f"Problems/{pid}/{tid}.OUT")
+    shutil.copy(f"{MAIN_SOL}.INP",f"Problems/{pid}/{str(tid).zfill(2)}.INP")
+    if OUTPUT:shutil.copy(f"{MAIN_SOL}.OUT",f"Problems/{pid}/{str(tid).zfill(2)}.OUT")
     else:
         with open(f"Problems/{pid}/{tid}.OUT","w") as file:file.write("")
 create(1)

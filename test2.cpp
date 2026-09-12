@@ -14,26 +14,23 @@
 
 using namespace std;
 using ll=long long;
-using ld=long double;
-mt19937_64 rd(chrono::steady_clock::now().time_since_epoch().count());
-ll rnd(ll l, ll r) {
-    return l + rd() % (r - l + 1);
-}
-
-const ll MAX = 1e6+1;
-const ll INF = 1e18;
+const ll MAX = 500;
 const ll MOD = 1e9+7;
-ll n,x,a[MAX];
-map<ll,ll> freq;
+const ll INF = 500;
+ll n,a[MAX],c[MAX];
+map<ll,ll> lo;
 void solve(){
-    cin>>n>>x;
-    for (ll i=0; i<n; ++i) cin>>a[i];
-    ll res=0;
+    cin>>n;
+    for (ll i=0; i<n; ++i)cin>>a[i];
     for (ll i=0; i<n; ++i){
-        res+=freq[x-a[i]];
-        ++freq[a[i]];
+        set<ll> t;
+        for (ll j=i; j>=0; --j){
+            t.insert(a[j]);
+            c[i]+=t.size();
+        }
     }
-    cout<<res<<'\n';
+    for (ll i=0; i<n; ++i)cout<<c[i]<<' ';
+    cout<<'\n';
 }
 int main(){
     auto start=chrono::high_resolution_clock::now();
